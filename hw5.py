@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
+import string
 def main(filename):
     # read file into lines
-    lines = open(" i_have_a_dream.txt").readlines()
+    lines = open(filename).readlines()
 
     # declare a word list
     all_words = []
@@ -18,20 +18,22 @@ def main(filename):
             # then, remove (strip) unwanted punctuations from every word
             # "dream." => "dream"
             word = word.strip(string.punctuation)
-            all_words.append(word)
-            # check if word is not empty
+            if word != "":
+                all_words.append(word)
+                # check if word is not empty
                 
 
     # compute word count from all_words
     from collections import Counter
-    word_counter = Counter(all_words)
+    word_counter = Counter()
+    word_counter.update(all_words)
     # dump to a csv file named "wordcount.csv":
     # word,count
     # a,12345
     # I,23456
     # ...
     import csv
-    with open('word_count.csv', 'w') as csv_file:
+    with open('wordcount.csv', 'w', newline='') as csv_file:
         # create a csv writer from a file object (or descriptor)
         writer = csv.writer(csv_file)
         # write table head
@@ -40,7 +42,9 @@ def main(filename):
         writer.writerows(word_counter.most_common())
         
     import json    
-    json.dump(word_counter.most_common(), open('word_counter.json', 'w')) 
+    json.dump(word_counter.most_common(), open('wordcount.json', 'w')) 
     
     import pickle
-    pickle.dump(word_counter.most_common(), open('word_counter.json', 'w'))
+    pickle.dump(word_counter, open('wordcount.pkl', 'wb'))
+if __name__ == '__main__':
+    main('i_have_a_dream.txt')
